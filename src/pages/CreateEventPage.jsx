@@ -1,8 +1,10 @@
 import dayjs from 'dayjs'
 import React, { useState, useEffect, useRef } from 'react'
-import DatePicker from 'react-datepicker'
+import DatePicker, { registerLocale } from 'react-datepicker'
 import { storage, firestore } from '../firebase'
 import { useAuth } from '../contexts/AuthContext'
+import enGb from 'date-fns/locale/en-GB'
+registerLocale('en-gb', enGb)
 
 // COMPS
 import Input from '../components/Input'
@@ -146,7 +148,7 @@ const CreateEventPage = () => {
       <h1 className="my-10 text-3xl font-bold text-gray-400 font-opensans">
         Create an event
       </h1>
-      {JSON.stringify(data, null, 2)}
+      {/* {JSON.stringify(data, null, 2)} */}
       {/* Basic info */}
       <Card>
         <Card.Header
@@ -186,7 +188,8 @@ const CreateEventPage = () => {
               maxTime={dayjs().endOf('date').$d}
               customInput={<DatePickerButton />}
               shouldCloseOnSelect={false}
-              closeOnScroll={false}
+              showPopperArrow={false}
+              locale="en-gb"
             />
           </div>
           <p className="mt-4 font-bold text-gray-600 font-opensans text-md">
@@ -205,7 +208,8 @@ const CreateEventPage = () => {
             maxTime={dayjs().endOf('date').$d}
             customInput={<DatePickerButton />}
             shouldCloseOnSelect={false}
-            closeOnScroll={false}
+            showPopperArrow={false}
+            locale="en-gb"
           />
         </Card.Body>
       </Card>
@@ -275,7 +279,7 @@ const CreateEventPage = () => {
             }}
             onDragOver={(e) => e.preventDefault()}
           >
-            <div className="flex items-center">
+            <div className="flex items-center justify-center">
               {imageSrc ? (
                 <img
                   src={imageSrc}

@@ -24,8 +24,8 @@ import DashboardPage from './pages/DashboardPage'
 
 const App = () => {
   return (
-    <ChakraProvider>
-      <Router>
+    <Router>
+      <ChakraProvider>
         <AuthProvider>
           <Navbar />
           <Switch>
@@ -39,8 +39,8 @@ const App = () => {
             <Route path="*" component={FourOhFour} />
           </Switch>
         </AuthProvider>
-      </Router>
-    </ChakraProvider>
+      </ChakraProvider>
+    </Router>
   )
 }
 export default hot(App)

@@ -1,24 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { firestore } from '../firebase'
+import React from 'react'
+import { useEventsStore } from '../stores/EventsStore'
 
 import EventCard from './EventCard'
 
-const EventsList = ({ className }) => {
-  const [events, setEvents] = useState([])
+const EventsList = ({ className, excludeId }) => {
+  let events = useEventsStore((state) => state.events)
 
-  useEffect(async () => {
-    try {
-      const _events = []
-      const docs = await firestore
-        .collection('events')
-        .orderBy('createdAt', 'desc')
-        .get()
-      docs.forEach((doc) => _events.push({ ...doc.data(), id: doc.id }))
-      setEvents(_events)
-    } catch (error) {
-      console.error('[GETTING EVENTS]:', error)
-    }
-  }, [])
+  if (excludeId) events = events.filter((event) => event.id !== excludeId)
 
   return (
     <div

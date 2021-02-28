@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text } from '@chakra-ui/react'
+import { Text, Tooltip } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { HeartIconFilled, ShareIcon, HeartIcon } from '../components/Icons'
 import dayjs from 'dayjs'
@@ -17,7 +17,10 @@ const EventCard = ({
   const startDateTimeParsed = dayjs(startDateTime.toDate())
 
   return (
-    <Link to={`/event/${id}`} className="z-40">
+    <Link
+      to={{ pathname: `/event/${id}`, state: { resetScroll: true } }}
+      className="z-40"
+    >
       <article className="shadow-xl rounded-lg overflow-hidden relative">
         <section className="absolute top-5 flex justify-between w-full">
           <p
@@ -29,7 +32,9 @@ const EventCard = ({
           <div className="flex">
             <div
               className="bg-white p-2 rounded-full mr-4 z-50 text-gray-700"
+              // TODO: Implement share logic
               onClick={(e) => e.preventDefault()}
+              onMouseDown={(e) => e.preventDefault()}
             >
               <ShareIcon className="w-6 h-6" />
             </div>
@@ -39,9 +44,10 @@ const EventCard = ({
                 e.preventDefault()
                 setLiked(!liked)
               }}
+              onMouseDown={(e) => e.preventDefault()}
             >
               {liked ? (
-                <HeartIconFilled className="w-7 h-7 text-red-600" />
+                <HeartIconFilled className="w-6 h-6 text-red-600" />
               ) : (
                 <HeartIcon className="w-6 h-6 text-gray-700" />
               )}
@@ -54,59 +60,33 @@ const EventCard = ({
         </div>
 
         <section
-          className="grid px-6 py-4 h-34"
+          className="grid px-6 pt-4 mb-2 h-28"
           style={{
             gridTemplateColumns: '15% 5% 80%',
-            gridAutoRows: '1fr',
+            gridAutoRows: '40% 50%',
           }}
         >
           <p className="col-start-1 text-purple-700 font-bold font-opensans text-lg text-center">
             {startDateTimeParsed.format('MMM').toUpperCase()}
           </p>
-          <Text
-            className="col-start-3 font-opensans font-semibold text-md mb-2"
-            isTruncated
-            noOfLines={2}
-          >
-            {name}
-          </Text>
-          <p className="col-start-1 text-center font-roboto text-2xl font-medium">
+          <Tooltip label={name} placement="top-start">
+            <p className="col-start-3  font-opensans font-semibold text-md mb-2 truncate">
+              {name}
+            </p>
+          </Tooltip>
+          <p className="col-start-1 justify-around flex items-center font-roboto text-2xl font-medium">
             {startDateTimeParsed.format('DD')}
           </p>
-          <Text
-            className="col-start-3 font-opensans text-md text-gray-400 font-semibold"
-            isTruncated
-            noOfLines={2}
-          >
-            {shortDescription}
-          </Text>
-        </section>
-        {/* <section className="px-6 py-4 flex">
-          <div className="mr-6">
-            <p className="text-center text-purple-700 font-bold font-opensans text-lg mb-2">
-              {startDateTimeParsed.format('MMM').toUpperCase()}
-            </p>
-            <p className="text-center font-roboto text-2xl font-medium">
-              {startDateTimeParsed.format('DD')}
-            </p>
-          </div>
-          <div>
+          <Tooltip label={shortDescription} placement="top-start">
             <Text
-              className="font-opensans font-semibold text-lg mb-2"
-              isTruncated
-              noOfLines={2}
-            >
-              {name}
-            </Text>
-            <Text
-              className="font-opensans text-md text-gray-400 font-semibold"
+              className="col-start-3 font-opensans text-md text-gray-400 font-semibold"
               isTruncated
               noOfLines={2}
             >
               {shortDescription}
             </Text>
-          </div>
-        </section> */}
+          </Tooltip>
+        </section>
       </article>
     </Link>
   )

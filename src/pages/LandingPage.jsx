@@ -8,6 +8,11 @@ import SearchBar from '../components/SearchBar'
 import Dropdown from '../components/Dropdown'
 import EventsList from '../components/EventsList'
 
+// Store
+import { useEventsStore } from '../stores/EventsStore'
+
+import { Skeleton } from '@chakra-ui/react'
+
 const SortingSeparator = (props) => {
   return (
     <div className={'w-3/4 mx-auto flex items-center ' + props.className}>
@@ -36,15 +41,25 @@ const SortingSeparator = (props) => {
 }
 
 const LandingPage = () => {
+  const fetchEvents = useEventsStore((state) => state.fetchEvents)
+  const loading = useEventsStore((state) => state.loading)
+
+  React.useEffect(() => {
+    fetchEvents()
+  }, [])
+
   return (
     <div className="h-full mb-52">
-      <div className=" aspect-w-5 aspect-h-2">
+      <Skeleton
+        isLoaded={!loading}
+        className="aspect-w-5 aspect-h-2 w-5/6 mx-auto rounded-xl overflow-hidden"
+      >
         <img
           src={headerImg}
-          className="object-cover z-10 w-5/6 mx-auto overflow-hidden rounded-xl"
+          className="object-cover z-10"
           alt="people dancing infront of a dj stage"
         />
-      </div>
+      </Skeleton>
       <SearchBar className="relative w-3/4 mx-auto -mt-14" />
       <SortingSeparator className="my-16" />
       <EventsList className="w-3/4" />

@@ -1,6 +1,5 @@
 .cache/
 coverage/
-dist/*
 !dist/index.html
 node_modules/
 *.log
@@ -17,4 +16,3 @@ Thumbs.db
 .env.local
 .prettierrc
 *.code-workspace
-dist

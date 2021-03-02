@@ -79,7 +79,7 @@ const Footer = () => {
           </div>
         </ul>
       </div>
-      <p className="text-gray-500 text-sm text-center pb-10">
+      <p className="text-gray-600 text-sm text-center pb-10">
         &copy; Copyright 2021,{' '}
         <a href="https://github.com/Cyber3x">Neven Lukić</a>
       </p>

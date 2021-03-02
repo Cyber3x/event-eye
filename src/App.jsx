@@ -11,6 +11,7 @@ import { AuthProvider } from './contexts/AuthContext'
 // Comps
 import PrivateRoute from './components/PrivateRoute'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 
 // Pages
 import SignupPage from './pages/SignupPage'
@@ -38,6 +39,7 @@ const App = () => {
             <PrivateRoute exact path="/create" component={CreateEventPage} />
             <Route path="*" component={FourOhFour} />
           </Switch>
+          <Footer />
         </AuthProvider>
       </ChakraProvider>
     </Router>

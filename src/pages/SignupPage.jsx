@@ -28,14 +28,16 @@ const SignupPage = () => {
       await signup(email, password)
       history.push('/')
     } catch (error) {
-      setError('Failed to create an account.')
+      setError('Greška pri izradi novog računa.')
     }
     setLoading(false)
   }
 
   return (
-    <div className="mx-auto mt-24 w-2/5">
-      <h1 className="font-semibold text-center text-4xl mb-10">Signup</h1>
+    <div className="mx-auto mt-20 w-2/5 mb-16">
+      <h1 className="font-semibold text-center text-4xl mb-10 font-roboto">
+        Registracija
+      </h1>
       {error && <AuthError error={error} />}
       <form onSubmit={handleSubmit}>
         <AuthInput
@@ -44,27 +46,30 @@ const SignupPage = () => {
           onChange={(value) => setEmail(value)}
         />
         <AuthInput
-          lable="Password"
+          lable="Loznika"
           type="password"
-          placeholder="Password"
+          placeholder="Lozinka"
           onChange={(value) => setPassword(value)}
         />
         <AuthInput
-          lable="Confirm password"
+          lable="Ponovljena lozinka"
           type="password"
-          placeholder="Confirm password"
+          placeholder="Ponovljena lozinka"
           onChange={(value) => setConfirmPassword(value)}
         />
         <button
-          className="bg-blue-400 p-2 w-full rounded-lg text-white font-semibold mt-4"
+          className="bg-purple-600 hover:bg-purple-700 p-2 w-full rounded-lg text-white font-semibold mt-4 font-opensans"
           type="submit"
           disabled={loading}
         >
-          Signup
+          Registriraj se
         </button>
       </form>
-      <h1 className="text-center mt-4">
-        Already have an account? <Link to="/login">Login</Link>
+      <h1 className="text-center mt-5 font-opensans">
+        Imate postojeći račun?{' '}
+        <Link to="/login" className="text-purple-700">
+          Prijavi se
+        </Link>
       </h1>
     </div>
   )

@@ -364,7 +364,7 @@ const CreateEventPage = () => {
         <Card>
           <Card.Header
             letter="K"
-            title="Informacije o kratama"
+            title="Informacije o kartama"
             description="Dodaj informacije gdje i kako se mogu kupiti karte."
             bg="from-green-900 to-green-300"
           />

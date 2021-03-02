@@ -6,7 +6,7 @@ const fs = require('fs')
 const config = (env) => {
   const currentPath = path.join(__dirname)
   const basePath = currentPath + '/.env.local'
-  const envPath = basePath + '.' + env.ENVIROMENT
+  const envPath = basePath
   const finalPath = fs.existsSync(envPath) ? envPath : basePath
   const fileEnv = dotenv.config({ path: finalPath }).parsed
 

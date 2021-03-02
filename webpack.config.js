@@ -1,21 +1,9 @@
 const webpack = require('webpack')
 const dotenv = require('dotenv')
 const path = require('path')
-const fs = require('fs')
+require('dotenv').config()
 
-const config = (env) => {
-  const currentPath = path.join(__dirname)
-  const basePath = currentPath + '/.env.local'
-  const envPath = basePath
-  const finalPath = fs.existsSync(envPath) ? envPath : basePath
-  const fileEnv = dotenv.config({ path: finalPath }).parsed
-
-  // reduce it to a nice object, the same as before
-  const envKeys = Object.keys(fileEnv).reduce((prev, next) => {
-    prev[`process.env.${next}`] = JSON.stringify(fileEnv[next])
-    return prev
-  }, {})
-
+const config = () => {
   return {
     entry: ['react-hot-loader/patch', './src/index.js'],
     output: {
@@ -59,7 +47,11 @@ const config = (env) => {
       historyApiFallback: true,
       contentBase: './dist',
     },
-    plugins: [new webpack.DefinePlugin(envKeys)],
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': JSON.stringify(dotenv.config().parsed),
+      }),
+    ],
   }
 }
 

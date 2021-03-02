@@ -14,28 +14,33 @@ import { useEventsStore } from '../stores/EventsStore'
 import { Skeleton } from '@chakra-ui/react'
 
 const SortingSeparator = (props) => {
+  const filterByDayType = useEventsStore((state) => state.filterByDayType)
+  const filterByPriceRange = useEventsStore((state) => state.filterByPriceRange)
+
   return (
-    <div className={'w-3/4 mx-auto flex items-center ' + props.className}>
+    <div className={'w-3/4 mx-auto flex ps-center ' + props.className}>
       <h1 className="flex-grow text-4xl font-bold text-gray-700 font-opensans xl:text-5xl">
-        Upcoming events
+        Nadolazeći događaji
       </h1>
-      <Dropdown text="Any day">
-        <Dropdown.Item>Weekday</Dropdown.Item>
-        <Dropdown.Item>Weekend</Dropdown.Item>
+      <Dropdown onChange={(id) => filterByDayType(id)}>
+        <Dropdown.Item id={0}>Svi dani</Dropdown.Item>
+        <Dropdown.Item id={1}>Radni dani</Dropdown.Item>
+        <Dropdown.Item id={2}>Vikend</Dropdown.Item>
       </Dropdown>
-      <Dropdown text="Price range">
-        <Dropdown.Item>Free</Dropdown.Item>
-        <Dropdown.Item>less than 20 kn</Dropdown.Item>
-        <Dropdown.Item>20 - 50 kn</Dropdown.Item>
-        <Dropdown.Item>50 - 100 kn</Dropdown.Item>
-        <Dropdown.Item>More than 100 kn</Dropdown.Item>
+      <Dropdown onChange={(id) => filterByPriceRange(id)}>
+        <Dropdown.Item id={0}>Sve cijene</Dropdown.Item>
+        <Dropdown.Item id={1}>Besplatno</Dropdown.Item>
+        <Dropdown.Item id={2}>Manje od 20 kn</Dropdown.Item>
+        <Dropdown.Item id={3}>20 - 50 kn</Dropdown.Item>
+        <Dropdown.Item id={4}>50 - 100 kn</Dropdown.Item>
+        <Dropdown.Item id={5}>Više od 100 kn</Dropdown.Item>
       </Dropdown>
-      <Dropdown text="Any category">
-        <Dropdown.Item>Live show</Dropdown.Item>
-        <Dropdown.Item>Theatre</Dropdown.Item>
+      {/* <Dropdown text="Kategorija">
+        <Dropdown.Item>Uživo</Dropdown.Item>
+        <Dropdown.Item>Predstava</Dropdown.Item>
         <Dropdown.Item>Party</Dropdown.Item>
-        <Dropdown.Item>Dance</Dropdown.Item>
-      </Dropdown>
+        <Dropdown.Item>Ples</Dropdown.Item>
+      </Dropdown> */}
     </div>
   )
 }
@@ -49,7 +54,7 @@ const LandingPage = () => {
   }, [])
 
   return (
-    <div className="h-full mb-52">
+    <div className="h-full mb-28">
       <Skeleton
         isLoaded={!loading}
         className="aspect-w-5 aspect-h-2 w-5/6 mx-auto rounded-xl overflow-hidden"

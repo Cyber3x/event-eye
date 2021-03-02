@@ -5,6 +5,7 @@ import EventCard from './EventCard'
 
 const EventsList = ({ className, excludeId }) => {
   let events = useEventsStore((state) => state.events)
+  const loading = useEventsStore((state) => state.loading)
 
   if (excludeId) events = events.filter((event) => event.id !== excludeId)
 
@@ -15,9 +16,16 @@ const EventsList = ({ className, excludeId }) => {
         className
       }
     >
-      {events.map((event) => {
-        return <EventCard key={event.id} {...event} />
-      })}
+      {!loading &&
+        (events.length !== 0 ? (
+          events.map((event) => {
+            return <EventCard key={event.id} {...event} />
+          })
+        ) : (
+          <h1 className="text-4xl font-roboto font-black text-purple-700 col-span-3 text-center mt-10">
+            Ne postoji događaj koji odgovara uvjetima pretrage.
+          </h1>
+        ))}
     </div>
   )
 }

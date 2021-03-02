@@ -24,7 +24,7 @@ const ForgotPassword = () => {
       await resetPassword(email)
       setMessage('Check your inbox for further instructions.')
     } catch (error) {
-      setError('Failed to reset password.')
+      setError('Greška pri postavljanju nove lozinke.')
     }
     setLoading(false)
   }

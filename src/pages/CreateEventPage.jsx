@@ -4,7 +4,10 @@ import DatePicker, { registerLocale } from 'react-datepicker'
 import { storage, firestore } from '../firebase'
 import { useAuth } from '../contexts/AuthContext'
 import enGb from 'date-fns/locale/en-GB'
-registerLocale('en-gb', enGb)
+import hrHr from 'date-fns/locale/hr'
+registerLocale('hr', hrHr)
+import { useHistory } from 'react-router-dom'
+import { useEventsStore } from '../stores/EventsStore'
 
 // COMPS
 import Input from '../components/Input'
@@ -18,6 +21,8 @@ const CreateEventPage = () => {
   const [imageSrc, setImageSrc] = useState(undefined)
   const imageInput = useRef(null)
   const { currentUser } = useAuth()
+  const history = useHistory()
+  const clearEvents = useEventsStore((state) => state.clearEvents)
   const [data, setData] = useState({
     name: '',
     location: '',
@@ -28,7 +33,7 @@ const CreateEventPage = () => {
     description: '',
     shortDescription: '',
     imageUrl: '',
-    ticketNeeded: true,
+    ticketNeeded: false,
     ticketPrice: '',
     ticketCurrency: 'HRK',
     ticketWhereToBuy: '',
@@ -137,7 +142,10 @@ const CreateEventPage = () => {
 
     try {
       const docRef = await firestore.collection('events').add(newEvent)
-      console.log('event added, id:', docRef.id)
+      newEvent = { ...newEvent, id: docRef.id }
+      clearEvents()
+      console.log(newEvent)
+      history.push('/')
     } catch (error) {
       console.error('[ERROR, UPLOAD EVENT]:', error)
     }
@@ -146,33 +154,32 @@ const CreateEventPage = () => {
   return (
     <div className="w-1/2 mx-auto">
       <h1 className="my-10 text-3xl font-bold text-gray-400 font-opensans">
-        Create an event
+        Izradi događaj
       </h1>
       {/* {JSON.stringify(data, null, 2)} */}
       {/* Basic info */}
       <Card>
         <Card.Header
-          letter="B"
-          title="Basic info"
+          letter="O"
+          title="Osnovne informacije"
           bg="from-red-600 to-yellow-400"
-          description="Name your event, add starting and ending times. Mark the event
-          location so people can find you."
+          description="Daj naziv, vrijeme i mjesto svome događaju da bi ga ljudi mogli lakše pronaći."
         />
         <Card.Body>
           <Input
-            lable="Name"
-            placeholder="Short, recognizable and memorable"
+            lable="Naziv"
+            placeholder="Kratko, prepoznatljivo i pamtljivo"
             onChange={(value) => setDataField('name')(value)}
             value={data.name}
           />
           <Input
-            lable="Location"
-            placeholder="Search locations"
+            lable="Lokacija"
+            placeholder="Pretraži lokacije"
             onChange={(value) => setDataField('location')(value)}
             value={data.location}
           />
           <p className="mt-4 text-sm font-bold text-gray-600 font-opensans">
-            Start date and time
+            Datum i vrijeme početka
           </p>
           <div className="w-full">
             <DatePicker
@@ -180,36 +187,36 @@ const CreateEventPage = () => {
               timeFormat="HH:mm"
               selected={data.startDateTime}
               onChange={setDataField('startDateTime')}
-              timeCaption="Start time"
+              timeCaption="Vrijeme početka"
               showTimeSelect
-              timeIntervals={10}
+              timeIntervals={15}
               minDate={dayjs().$d}
               minTime={data.minStartTime}
               maxTime={dayjs().endOf('date').$d}
               customInput={<DatePickerButton />}
               shouldCloseOnSelect={false}
               showPopperArrow={false}
-              locale="en-gb"
+              locale="hr"
             />
           </div>
           <p className="mt-4 font-bold text-gray-600 font-opensans text-md">
-            End date and time
+            Datum i vrijeme kraja
           </p>
           <DatePicker
             dateFormat="dd. / MM. / yyyy. - HH:mm"
             timeFormat="HH:mm"
             selected={data.endDateTime}
             onChange={setDataField('endDateTime')}
-            timeCaption="End time"
+            timeCaption="Vrijeme kraja"
             showTimeSelect
-            timeIntervals={10}
+            timeIntervals={15}
             minDate={data.startDateTime}
             minTime={data.minEndTime}
             maxTime={dayjs().endOf('date').$d}
             customInput={<DatePickerButton />}
             shouldCloseOnSelect={false}
             showPopperArrow={false}
-            locale="en-gb"
+            locale="hr"
           />
         </Card.Body>
       </Card>
@@ -217,27 +224,27 @@ const CreateEventPage = () => {
       {/* More info */}
       <Card>
         <Card.Header
-          letter="M"
+          letter="V"
           bg="from-blue-900 to-green-400"
-          title="More info"
-          description="Add description to your event so people know what’s going on."
+          title="Više informacija"
+          description="Dodaj opis da ljudi znaju zašto bi baš trebali doći na tvoj događaj."
         />
         <Card.Body>
           <Input
             multiline
-            lable="Description"
-            placeholder="Write down what’t happening and why people should come"
+            lable="Opis"
+            placeholder="Ukratko opiši što se događa i kako će to izgledati"
             onChange={(value) => setDataField('description')(value)}
             value={data.description}
           />
           <Input
-            lable="Short description"
-            placeholder="Short, catchy, memorable"
+            lable="Kratki opis"
+            placeholder="Kratak, pamtljiv, jednostavan"
             onChange={(value) => setDataField('shortDescription')(value)}
             value={data.shortDescription}
           />
           <p className="mb-2 mt-4 text-sm font-bold text-gray-600 font-opensans">
-            Is this event free?
+            Je li događaj besplatan?
           </p>
           <div className="w-full text-xs font-semibold text-purple-700 placeholder-gray-400 border-2 border-gray-300 outline-none rounded-xl font-opensans flex overflow-hidden">
             <div
@@ -247,7 +254,7 @@ const CreateEventPage = () => {
               }
               onClick={() => setDataField('ticketNeeded')(false)}
             >
-              Yes, the event is free
+              Da, događaj je besplatan
             </div>
             <div
               className={
@@ -256,7 +263,7 @@ const CreateEventPage = () => {
               }
               onClick={() => setDataField('ticketNeeded')(true)}
             >
-              No, tickets are needed
+              Ne, karte su potrebne
             </div>
           </div>
         </Card.Body>
@@ -265,9 +272,9 @@ const CreateEventPage = () => {
       {/* Upload image */}
       <Card>
         <Card.Header
-          letter="I"
-          title="Upload Image"
-          description="Add an image that represents your event and makes is more eye catching."
+          letter="U"
+          title="Učitaj fotografiju"
+          description="Dodaj fotografiju vezanu uz svoj dogaaj kako bi lakše ulovila oko potencijalnih posjetitelja."
           bg="from-red-600 to-gray-800"
         />
         <Card.Body>
@@ -303,22 +310,22 @@ const CreateEventPage = () => {
                     />
                   </svg>
                   <p className="text-sm text-black font-bold pt-2 font-opensans">
-                    Drag and drop an image
+                    Povuci i baci fotografiju
                   </p>
                   <p className="text-xs text-gray-500 mt-1 font-roboto">
-                    Or{' '}
+                    Ili{' '}
                     <span
                       className="text-purple-700 font-semibold cursor-pointer"
                       onClick={() => imageInput.current.click()}
                     >
-                      browse
+                      izaberi
                     </span>{' '}
-                    to chose a file
+                    fotografiju s računala.
                   </p>
                   <p className="text-sm text-gray-400 w-5/6 mx-auto mt-4 font-opensans">
-                    This is the first image attendies will see at the top of
-                    your listing. Use a high qulity image: 2160x1080px (2:1
-                    ratio){' '}
+                    Ovo je prva slika koju će tvoji posjetitelji vidjeti na vrhu
+                    stranice tvojeg događaja. Koristi fotografiju visoke
+                    rezulucije. Preporučamo: 2160x1080px (2:1 omjer)
                   </p>
                 </div>
               )}
@@ -329,12 +336,12 @@ const CreateEventPage = () => {
               className="mt-4 bg-purple-700 text-white hover:bg-purple-900"
               onClick={() => handleImageUpload()}
             >
-              Upload
+              Učitaj
             </Card.Button>
           )}
           {showSuccesfulUpload && (
             <Card.Button className="mt-4 bg-green-700 text-white text-sm cursor-default">
-              Image successfully uploaded
+              Fotografija uspješno učitana
             </Card.Button>
           )}
           {imageFromatError && (
@@ -356,16 +363,16 @@ const CreateEventPage = () => {
       {data.ticketNeeded && (
         <Card>
           <Card.Header
-            letter="T"
-            title="Ticket info"
-            description="Add information about tickets and payment methodes."
+            letter="K"
+            title="Informacije o kratama"
+            description="Dodaj informacije gdje i kako se mogu kupiti karte."
             bg="from-green-900 to-green-300"
           />
 
           <Card.Body>
             <Input
-              lable="Price"
-              placeholder="Ticket price"
+              lable="Cijena"
+              placeholder="Cijena karte"
               onChange={(value) => setDataField('ticketPrice')(value)}
               value={data.ticketPrice}
             />
@@ -376,8 +383,8 @@ const CreateEventPage = () => {
             <Dropdown.Item>Cad</Dropdown.Item>
           </Dropdown> */}
             <Input
-              lable="Where to buy tickets"
-              placeholder="Write where can attendies buy tickets"
+              lable="Gdje kupiti"
+              placeholder="Napiši gdje se mogu kupiti krate"
               multiline
               onChange={(value) => setDataField('ticketWhereToBuy')(value)}
               value={data.ticketWhereToBuy}
@@ -392,10 +399,10 @@ const CreateEventPage = () => {
           className="text-white bg-purple-700 hover:bg-purple-900"
           onClick={() => handleEventUpload()}
         >
-          Finish event creation
+          Završi izradu događaja
         </Card.Button>
         <Card.Button className="border-2 border-gray-400 bg-white text-gray-500 hover:bg-gray-400 hover:text-white mt-6">
-          Abandon
+          Napusti
         </Card.Button>
       </Card>
     </div>

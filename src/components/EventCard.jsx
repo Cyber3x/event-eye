@@ -3,6 +3,8 @@ import { Text, Tooltip } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { HeartIconFilled, ShareIcon, HeartIcon } from '../components/Icons'
 import dayjs from 'dayjs'
+require('dayjs/locale/hr')
+dayjs.locale('hr')
 
 const EventCard = ({
   name,
@@ -27,7 +29,7 @@ const EventCard = ({
             className="bg-white ml-5 items-center flex px-4 rounded-md text-sm font-opensans z-50 font-semibold cursor-default text-gray-700 3xl:text-base"
             onClick={(e) => e.preventDefault()}
           >
-            {ticketNeeded ? ticketPrice + ' kn' : 'FREE'}
+            {ticketNeeded ? ticketPrice + ' kn' : 'BESPLATNO'}
           </p>
           <div className="flex">
             <div
@@ -56,7 +58,7 @@ const EventCard = ({
         </section>
 
         <div className="aspect-w-2 aspect-h-1">
-          <img src={imageUrl} className="object-fill" />
+          <img src={imageUrl} className="object-cover" />
         </div>
 
         <section
@@ -67,7 +69,7 @@ const EventCard = ({
           }}
         >
           <p className="col-start-1 text-purple-700 font-bold font-opensans text-lg text-center">
-            {startDateTimeParsed.format('MMM').toUpperCase()}
+            {startDateTimeParsed.format('MMM').toUpperCase().substr(0, 3)}
           </p>
           <Tooltip label={name} placement="top-start">
             <p className="col-start-3  font-opensans font-semibold text-md mb-2 truncate">
@@ -75,7 +77,7 @@ const EventCard = ({
             </p>
           </Tooltip>
           <p className="col-start-1 justify-around flex items-center font-roboto text-2xl font-medium">
-            {startDateTimeParsed.format('DD')}
+            {startDateTimeParsed.format('DD[.]')}
           </p>
           <Tooltip label={shortDescription} placement="top-start">
             <Text

@@ -55,14 +55,14 @@ const Navbar = () => {
             <>
               <NavbarLink
                 to="/create"
-                text="Create an event"
+                text="Izradi događaj"
                 color={textColor}
               />
-              <NavbarLink to="/dashboard" text="Dashboard" color={textColor} />
+              {/* <NavbarLink to="/dashboard" text="Profil" color={textColor} /> */}
 
               <NavbarLink
                 to="#"
-                text="Logout"
+                text="Odjavi se"
                 color={textColor}
                 onClick={handleLogout}
               />
@@ -70,12 +70,12 @@ const Navbar = () => {
           ) : (
             <>
               <NavbarLink
-                text="Login"
+                text="Prijava"
                 to="/login"
                 className="transition-colors rounded-md px-14 hover:text-white hover:bg-purple-700 h-10 flex items-center"
               />
               <NavbarLink
-                text="Sign up"
+                text="Registracija"
                 to="/signup"
                 className="transition-colors rounded-md px-14 hover:text-white hover:bg-purple-700 text-purple-700 h-10 flex items-center"
               />

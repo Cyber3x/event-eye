@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 
-const Dropdown = ({ children, text, className }) => {
+const Dropdown = ({ children, className, onChange }) => {
   const node = useRef()
   const [isOpen, setIsOpen] = useState()
-  const [value, setValue] = useState(text)
+  const [selectedId, setSelectedId] = useState(0)
 
   const handleClick = (e) => {
     if (node.current.contains(e.target)) {
@@ -19,6 +19,12 @@ const Dropdown = ({ children, text, className }) => {
       document.removeEventListener('mousedown', handleClick)
     }
   }, [])
+
+  const handleChange = (newId) => {
+    setSelectedId(newId)
+    onChange(newId)
+  }
+
   return (
     <div className="relative inline-block text-left" ref={node}>
       <button
@@ -28,7 +34,7 @@ const Dropdown = ({ children, text, className }) => {
           className
         }
       >
-        {value}
+        {children[selectedId].props.children}
         <svg
           className="w-6 h-6 ml-2 xl:ml-5"
           fill="none"
@@ -54,11 +60,12 @@ const Dropdown = ({ children, text, className }) => {
         </svg>
       </button>
       {isOpen && (
-        <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+        <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
           {children.map((child) => (
             <div
+              key={child.props.id}
               className="py-1"
-              onClick={() => setValue(child.props.children)}
+              onClick={() => handleChange(child.props.id)}
             >
               {child}
             </div>
@@ -71,7 +78,7 @@ const Dropdown = ({ children, text, className }) => {
 
 const Item = ({ children }) => {
   return (
-    <p class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+    <p className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
       {children}
     </p>
   )

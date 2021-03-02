@@ -4,6 +4,10 @@ import dayjs from 'dayjs'
 import EventsList from '../components/EventsList'
 import { useEventsStore } from '../stores/EventsStore'
 
+import fbLogo from '../assets/images/facebook.png'
+import twLogo from '../assets/images/twitter.png'
+import igLogo from '../assets/images/instagram.png'
+
 const EventDetailsPage = () => {
   const [event, setEvent] = useState({})
   const { id } = useParams()
@@ -31,9 +35,9 @@ const EventDetailsPage = () => {
       }
     }
 
-    if (_location.state.resetScroll) {
+    if (_location.state.resetScroll && _location.state && _location) {
       window.scrollTo(0, 0)
-      _location.state = {}
+      _location.state.resetScroll = {}
     }
   }, [events, id])
 
@@ -50,8 +54,27 @@ const EventDetailsPage = () => {
     ticketWhereToBuy,
     location,
   } = event
+
   const startDateTimeParsed = dayjs(startDateTime?.toDate())
   const endDateTimeParsed = dayjs(endDateTime?.toDate())
+
+  const startDateTimeFormatted = startDateTimeParsed.format(
+    'dddd, D[.] MMMM, YYYY, [u] HH:mm'
+  )
+  const startDateTimeDisplay =
+    startDateTimeFormatted[0].toLocaleUpperCase() +
+    startDateTimeFormatted.substring(1)
+
+  let hoursDisplay
+  if (startDateTimeParsed.isSame(endDateTimeParsed, 'date')) {
+    hoursDisplay = `${startDateTimeParsed.format(
+      'HH:mm'
+    )} - ${endDateTimeParsed.format('HH:mm')}`
+  } else {
+    hoursDisplay = `${startDateTimeParsed.format(
+      'HH:mm'
+    )} - ${endDateTimeParsed.format('HH:mm [(]D[.] MMMM[)]')}`
+  }
 
   return !loading ? (
     <div className="mb-40">
@@ -63,7 +86,7 @@ const EventDetailsPage = () => {
           <h1 className="text-4xl font-bold text-gray-700 font-opensans">
             {name}
           </h1>
-          <p className="text-lg font-medium text-gray-500 font-roboto">
+          {/* <p className="text-lg font-medium text-gray-500 font-roboto">
             By:{' '}
             <Link
               className="text-purple-700 hover:text-purple-900 hover:font-medium"
@@ -71,59 +94,65 @@ const EventDetailsPage = () => {
             >
               {createdBy}
             </Link>
-          </p>
+          </p> */}
         </div>
         <div className="col-span-3 col-start-8 mr-10">
           <h1 className="text-2xl font-bold text-gray-700 font-opensans">
-            {startDateTimeParsed.format('dddd, MMM D, YYYY, [at] HH:mm')}
+            {startDateTimeDisplay}
           </h1>
           <div className="flex font-roboto justify-between mt-4">
             <button className="py-2 w-0.45 font-opensans border-2 rounded-lg border-purple-700 text-sm ">
-              Mark as going
+              Označi da idem
             </button>
             <button className="py-2 w-0.45 font-opensans text-sm rounded-lg bg-purple-700 text-white ">
-              Add to calendar
+              Dodaj u kalendar
             </button>
           </div>
         </div>
       </div>
       <div className="w-3/4 mx-auto grid grid-cols-10 mt-4">
         <section className="col-span-6">
-          <TextHeader text="Description" />
+          <TextHeader text="Opis" />
           <TextBody>{description}</TextBody>
-          <TextHeader text="Hours" />
+          <TextHeader text="Vrijeme" />
           <TextBody>
-            Hours:
+            Sati:
+            <span className="font-bold text-gray-700 ml-2">{hoursDisplay}</span>
+          </TextBody>
+          <TextHeader text="Karte" />
+          <TextBody>
+            Cijena:{' '}
             <span className="font-bold text-gray-700 ml-2">
-              {startDateTimeParsed.format('HH:mm')} -{' '}
-              {endDateTimeParsed.format('HH:mm')}
+              {ticketNeeded ? ticketPrice : 'BESPLATNO'} {ticketCurrency}
             </span>
           </TextBody>
-          <TextHeader text="Tickets" />
-          <TextBody>
-            Price:{' '}
-            <span className="font-bold text-gray-700 ml-2">
-              {ticketNeeded ? ticketPrice : 'FREE'} {ticketCurrency}
-            </span>
-          </TextBody>
-          <TextBody>
-            <span className="font-bold -mt-4">Where to buy them?</span>
-          </TextBody>
-          <TextBody>{ticketWhereToBuy}</TextBody>
+          {ticketNeeded && (
+            <>
+              <TextBody>
+                <span className="font-bold -mt-4">Gdje ih kupiti?</span>
+              </TextBody>
+              <TextBody>{ticketWhereToBuy}</TextBody>
+            </>
+          )}
         </section>
         <section className="col-span-3 col-start-8">
-          <TextHeader text="Location" />
-          <div className="aspect-w-4 aspect-h-3 rounded-xl overflow-hidden mt-8">
+          <TextHeader text="Lokacija" />
+          {/* <div className="aspect-w-4 aspect-h-3 rounded-xl overflow-hidden mt-8">
             <img src={imageUrl} className="object-cover" />
-          </div>
-          <TextHeader text={name} className="text-xl" />
+          </div> */}
+          {/* <TextHeader text={name} className="text-xl" /> */}
           <TextBody>{location}</TextBody>
           {/* <TextHeader text="Tags" /> */}
           <TextHeader text="Share with friends" />
+          <div className="flex w-full h-16 mt-8">
+            <img src={fbLogo} className="mr-4" />
+            <img src={igLogo} className="mr-4" />
+            <img src={twLogo} />
+          </div>
         </section>
       </div>
-      <h1 className="w-3/4 mx-auto text-3xl font-semibold text-gray-700 font-opensans mt-28 mb-14">
-        Other events you may like
+      <h1 className="w-3/4 mx-auto text-4xl font-semibold text-gray-600 font-opensans mt-44 mb-14">
+        Ostali događaji koji bi Vam se mogli svidjeti
       </h1>
       <EventsList className="w-3/4" excludeId={id} />
     </div>
